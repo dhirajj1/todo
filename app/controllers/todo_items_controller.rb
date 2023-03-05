@@ -7,8 +7,12 @@ class TodoItemsController < ApplicationController
     redirect_to @todo_list
   end
 
+  def show
+    render :show
+  end  
+
   def destroy
-    @todo_item = @todo_list.todo_items.find(params[:id])
+    @todo_item = TodoItem.find_by(id: params[:id])
     if @todo_item.destroy
      flash[:success] = "Todo List item was deleted."
     else
@@ -18,8 +22,10 @@ class TodoItemsController < ApplicationController
   end
 
   def complete
+    @todo_item = @todo_list.todo_items.find(params[:id])
     @todo_item.update_attribute(:completed_at, Time.now)
     redirect_to @todo_list, notice: "Todo item completed"
+    redirect_to todo_list_todo_item_path, notice: "Todo item marked as complete"
   end
 
 private
